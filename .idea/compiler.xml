@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile default="true" name="Default" enabled="true" />
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="my-qubar-sso" />
+        <module name="my-qubar-dubbo-service" />
+        <module name="my-qubar-dubbo-interface" />
+        <module name="my-qubar-server" />
+      </profile>
+    </annotationProcessing>
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="bishe00" options="-parameters" />
+      <module name="my-qubar-dubbo" options="" />
+      <module name="my-qubar-dubbo-interface" options="-parameters" />
+      <module name="my-qubar-dubbo-service" options="-parameters" />
+      <module name="my-qubar-server" options="-parameters" />
+      <module name="my-qubar-sso" options="-parameters" />
+    </option>
+  </component>
+</project>

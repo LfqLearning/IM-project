@@ -1,0 +1,72 @@
+{
+  "groups": [
+    {
+      "name": "aliyun",
+      "type": "com.qubar.sso.config.AliyunConfig",
+      "sourceType": "com.qubar.sso.config.AliyunConfig"
+    },
+    {
+      "name": "qubar.huanxin",
+      "type": "com.qubar.sso.config.HuanXinConfig",
+      "sourceType": "com.qubar.sso.config.HuanXinConfig"
+    }
+  ],
+  "properties": [
+    {
+      "name": "aliyun.access-key-id",
+      "type": "java.lang.String",
+      "sourceType": "com.qubar.sso.config.AliyunConfig"
+    },
+    {
+      "name": "aliyun.access-key-secret",
+      "type": "java.lang.String",
+      "sourceType": "com.qubar.sso.config.AliyunConfig"
+    },
+    {
+      "name": "aliyun.bucket-name",
+      "type": "java.lang.String",
+      "sourceType": "com.qubar.sso.config.AliyunConfig"
+    },
+    {
+      "name": "aliyun.endpoint",
+      "type": "java.lang.String",
+      "sourceType": "com.qubar.sso.config.AliyunConfig"
+    },
+    {
+      "name": "aliyun.url-prefix",
+      "type": "java.lang.String",
+      "sourceType": "com.qubar.sso.config.AliyunConfig"
+    },
+    {
+      "name": "jwt.secret",
+      "type": "java.lang.String",
+      "description": "Description for jwt.secret."
+    },
+    {
+      "name": "qubar.huanxin.app-name",
+      "type": "java.lang.String",
+      "sourceType": "com.qubar.sso.config.HuanXinConfig"
+    },
+    {
+      "name": "qubar.huanxin.client-id",
+      "type": "java.lang.String",
+      "sourceType": "com.qubar.sso.config.HuanXinConfig"
+    },
+    {
+      "name": "qubar.huanxin.client-secret",
+      "type": "java.lang.String",
+      "sourceType": "com.qubar.sso.config.HuanXinConfig"
+    },
+    {
+      "name": "qubar.huanxin.org-name",
+      "type": "java.lang.String",
+      "sourceType": "com.qubar.sso.config.HuanXinConfig"
+    },
+    {
+      "name": "qubar.huanxin.url",
+      "type": "java.lang.String",
+      "sourceType": "com.qubar.sso.config.HuanXinConfig"
+    }
+  ],
+  "hints": []
+}

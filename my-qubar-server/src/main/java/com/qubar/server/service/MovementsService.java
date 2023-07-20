@@ -52,7 +52,7 @@ public class MovementsService {
      * @param multipartFiles
      * @return
      */
-    public Boolean saveMovements(String textContent,
+    public String saveMovements(String textContent,
                                  String location,
                                  String longitude,
                                  String latitude,
@@ -74,9 +74,12 @@ public class MovementsService {
 
         // 图片上传
         List<String> imageUrls = new ArrayList<>();
-        for (MultipartFile multipartFile : multipartFiles) {
-            PicUploadResult uploadResult = this.picUploadService.upload(multipartFile);
-            imageUrls.add(uploadResult.getName());
+
+        if (multipartFiles != null && multipartFiles.length != 0) {
+            for (MultipartFile multipartFile : multipartFiles) {
+                PicUploadResult uploadResult = this.picUploadService.upload(multipartFile);
+                imageUrls.add(uploadResult.getName());
+            }
         }
 
         publish.setMedias(imageUrls);

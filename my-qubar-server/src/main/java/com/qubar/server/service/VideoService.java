@@ -64,15 +64,15 @@ public class VideoService {
         video.setSeeType(1);
 
         try {
-            //上传图片——上传到阿里云OSS
-            PicUploadResult picUploadResult = picUploadService.upload(picFile);
-            video.setPicUrl(picUploadResult.getName());
-
             //上传视频
             StorePath storePath = fastFileStorageClient.uploadFile(videoFile.getInputStream(),
                     videoFile.getSize(),
                     StringUtils.substringAfter(videoFile.getOriginalFilename(), "."), null);
             video.setVideoUrl(fdfsWebServer.getWebServerUrl() + storePath.getFullPath());
+
+            //上传图片——上传到阿里云OSS
+            PicUploadResult picUploadResult = picUploadService.upload(picFile);
+            video.setPicUrl(picUploadResult.getName());
 
             return this.videoApi.saveVideo(video);
         } catch (Exception e) {
@@ -101,6 +101,7 @@ public class VideoService {
 
         PageInfo<Video> pageInfo = this.videoApi.queryVideoList(page, pageSize);
 
+        // TODO 关闭小视频redis查询，稍后打开
 /*        //先从Redis进行命中，如果命中则返回推荐列表，如果未命中查询默认列表
         String redisValue = this.redisTemplate.opsForValue().get("QUANZI_VIDEO_RECOMMEND_" + user.getId());
         if (StringUtils.isNotEmpty(redisValue)) {
@@ -146,7 +147,7 @@ public class VideoService {
 
             videoVo.setHasFocus(0); //TODO 是否关注
 
-            String likeUserCommentsKey = "QUANZI_COMMENT_LIVE_USER_" + user.getId() + "_" + videoVo.getId();
+            String likeUserCommentsKey = "QUANZI_COMMENT_LIKE_USER_" + user.getId() + "_" + videoVo.getId();
             if (Boolean.TRUE.equals(this.redisTemplate.hasKey(likeUserCommentsKey))) {
                 videoVo.setHasLiked(1);//videoVo 是否点赞
             } else {
@@ -158,7 +159,7 @@ public class VideoService {
                 }
             }
 
-            String likeCommentsCountKey = "QUANZI_COMMENT_LIVE_" + videoVo.getId();
+            String likeCommentsCountKey = "QUANZI_COMMENT_LIKE_" + videoVo.getId();
             String likeCommentsCountInRedis = this.redisTemplate.opsForValue().get(likeCommentsCountKey);
             if (com.alibaba.dubbo.common.utils.StringUtils.isNotEmpty(likeCommentsCountInRedis)) {
                 videoVo.setLikeCount(Integer.valueOf(likeCommentsCountInRedis));//videoVo 点赞数

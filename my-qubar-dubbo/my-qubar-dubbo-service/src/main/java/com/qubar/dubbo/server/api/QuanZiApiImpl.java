@@ -4,6 +4,7 @@ import com.alibaba.dubbo.config.annotation.Service;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.lang.Nullable;
 import com.qubar.dubbo.server.pojo.*;
+import com.qubar.dubbo.server.server.IdService;
 import com.qubar.dubbo.server.vo.PageInfo;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,12 +24,15 @@ public class QuanZiApiImpl implements QuanZiApi {
     @Autowired
     private MongoTemplate mongoTemplate;
 
+    @Autowired
+    private IdService idService;
+
     @Override
-    public boolean savePublish(Publish publish) {
+    public String savePublish(Publish publish) {
 
         // 校验publish对象
         if (publish.getUserId() == null) {
-            return false;
+            return null;
         }
         // ...其他逻辑类似
 
@@ -37,6 +41,9 @@ public class QuanZiApiImpl implements QuanZiApi {
             publish.setId(ObjectId.get());
             publish.setCreated(System.currentTimeMillis());
             publish.setSeeType(1);//查看权限设置 1-公开，2-私密，3-部分可见，4-不给谁看
+
+            // 增加自增长的pid
+            publish.setPid(this.idService.createId("publish", publish.getId().toHexString()));
 
             // 保存动态信息到发布表——quanzi_publish
             this.mongoTemplate.save(publish);
@@ -62,13 +69,13 @@ public class QuanZiApiImpl implements QuanZiApi {
 
                 mongoTemplate.save(timeLine, "quanzi_time_line_" + user.getFriendId());//将动态信息存入好友时间线表中——time_line_friendId
             }
-            return true;
+            return String.valueOf(publish.getId());
         } catch (Exception e) {
             e.printStackTrace();
             //TODO 出错时事务回滚！！！ 重点
         }
 
-        return false;
+        return null;
     }
 
     @Override

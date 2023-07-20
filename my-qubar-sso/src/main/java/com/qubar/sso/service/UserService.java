@@ -41,7 +41,7 @@ public class UserService {
     private String secret;
 
     @Autowired
-    private RocketMQTemplate rocketMQTemplate;
+    private RocketMQTemplate rocketMQTemplate;//TODO RocketMQ消息
 
     @Autowired
     private HuanXinService huanXinService;

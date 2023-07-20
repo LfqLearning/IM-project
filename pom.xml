@@ -7,6 +7,7 @@
         <module>my-qubar-sso</module>
         <module>my-qubar-dubbo</module>
         <module>my-qubar-server</module>
+        <module>my-qubar-recommend</module>
     </modules>
 
     <parent>

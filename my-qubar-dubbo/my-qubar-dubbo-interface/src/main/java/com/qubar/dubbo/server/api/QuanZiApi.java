@@ -10,9 +10,9 @@ public interface QuanZiApi {
      * 发布动态
      *
      * @param publish
-     * @return
+     * @return 主键id
      */
-    boolean savePublish(Publish publish);
+    String savePublish(Publish publish);
 
     /**
      * 查询好友动态——即查询自己的时间线性表

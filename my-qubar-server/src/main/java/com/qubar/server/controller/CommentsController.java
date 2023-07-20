@@ -2,6 +2,7 @@ package com.qubar.server.controller;
 
 import com.qubar.server.service.CommentsService;
 import com.qubar.server.service.MovementsService;
+import com.qubar.server.service.QuanziMQService;
 import com.qubar.server.vo.PageResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,6 +20,9 @@ public class CommentsController {
 
     @Autowired
     private MovementsService movementsService;
+
+    @Autowired
+    private QuanziMQService quanziMQService;
 
     /**
      * 查询评论列表
@@ -57,6 +61,10 @@ public class CommentsController {
             String content = param.get("comment");
             Boolean bool = this.commentsService.saveComments(publishId, content);
             if (Boolean.TRUE.equals(bool)) {
+
+                // 发送消息
+                this.quanziMQService.sendCommentPublishMsg(publishId);
+
                 return ResponseEntity.ok(null);
             }
         } catch (Exception e) {

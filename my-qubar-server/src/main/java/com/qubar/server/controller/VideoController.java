@@ -24,6 +24,13 @@ public class VideoController {
     @Autowired
     private CommentsController commentsController;
 
+    /**
+     * 发布小视频
+     *
+     * @param picFile
+     * @param videoFile
+     * @return
+     */
     @PostMapping
     public ResponseEntity<Void> saveVideo(@RequestParam(value = "videoThumbnail", required = false) MultipartFile picFile,
                                           @RequestParam(value = "videoFile", required = false) MultipartFile videoFile) {

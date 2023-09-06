@@ -8,6 +8,7 @@
         <module>my-qubar-dubbo</module>
         <module>my-qubar-server</module>
         <module>my-qubar-recommend</module>
+        <module>my-qubar-spark</module>
     </modules>
 
     <parent>

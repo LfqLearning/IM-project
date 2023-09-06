@@ -14,6 +14,7 @@ import com.qubar.server.utils.UserThreadLocal;
 import com.qubar.server.vo.Movements;
 import com.qubar.server.vo.PageResult;
 import com.qubar.server.vo.PicUploadResult;
+import com.sun.org.apache.xml.internal.resolver.helpers.PublicId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
@@ -97,13 +98,44 @@ public class MovementsService {
      */
     private PageResult queryPublishList(User user, Integer page, Integer pageSize) {
         PageResult pageResult = new PageResult();
-        Long userId = null;
-        if (user != null) {
-            userId = user.getId();
+        Long userId = null; //默认查询推荐动态
+
+        PageInfo<Publish> pageInfo = null;
+        if (user == null) {
+            // 查询推荐动态
+            String redisKey = "QUANZI_PUBLISH_RECOMMEND_" + UserThreadLocal.get().getId();
+            String value = this.redisTemplate.opsForValue().get(redisKey);
+            if (StringUtils.isNotEmpty(value)) {
+                // 命中数据
+                String[] pids = StringUtils.split(value, ',');
+                int startIndex = (page - 1) * pageSize;
+                if (startIndex < pids.length) {
+                    int endIndex = startIndex + pageSize - 1;
+                    if (endIndex >= pids.length) {
+                        endIndex = pids.length - 1;
+                    }
+
+                    List<Long> pidList = new ArrayList<>();
+                    for (int i = startIndex; i <= endIndex; i++){
+                        pidList.add(Long.valueOf(pids[i]));
+                    }
+
+                    List<Publish> publishList = this.quanZiApi.queryPublishByPIds(pidList);
+                    pageInfo = new PageInfo<>();
+                    pageInfo.setRecords(publishList);
+                }
+
+            }
+        }
+
+        if (pageInfo == null) {
+            if (user != null) {
+                userId = user.getId();
+            }
+            pageInfo = this.quanZiApi.queryPublishList(userId, page, pageSize);
         }
 
         // 用户查询自己时间线表，获取动态信息
-        PageInfo<Publish> pageInfo = this.quanZiApi.queryPublishList(userId, page, pageSize);
 
         user = UserThreadLocal.get();
 

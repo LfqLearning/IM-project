@@ -4,6 +4,7 @@ import com.alibaba.dubbo.config.annotation.Service;
 import com.mongodb.client.result.DeleteResult;
 import com.qubar.dubbo.server.pojo.FollowUser;
 import com.qubar.dubbo.server.pojo.Video;
+import com.qubar.dubbo.server.server.IdService;
 import com.qubar.dubbo.server.vo.PageInfo;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,18 +23,23 @@ public class VideoApiImpl implements VideoApi {
     @Autowired
     private MongoTemplate mongoTemplate;
 
+    @Autowired
+    private IdService idService;
+
     @Override
-    public Boolean saveVideo(Video video) {
+    public String saveVideo(Video video) {
 
         if (video.getUserId() == null) {
-            return false;
+            return null;
         }
 
         video.setId(ObjectId.get());
+        // 自增长vid
+        video.setVid(this.idService.createId("video", video.getId().toHexString()));
         video.setCreated(System.currentTimeMillis());
         this.mongoTemplate.save(video);
 
-        return true;
+        return video.getId().toHexString();
     }
 
     @Override
@@ -94,5 +100,18 @@ public class VideoApiImpl implements VideoApi {
         long followUserCount = this.mongoTemplate.count(query, FollowUser.class);
 
         return followUserCount;
+    }
+
+    @Override
+    public Video queryVideoById(String videoId) {
+        return this.mongoTemplate.findById(new ObjectId(videoId), Video.class);
+    }
+
+    @Override
+    public List<Video> queryVideoListByPids(List<Long> vidList) {
+
+        Criteria criteria = Criteria.where("vid").in(vidList);
+        Query query = Query.query(criteria);
+        return this.mongoTemplate.find(query, Video.class);
     }
 }

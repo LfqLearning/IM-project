@@ -251,4 +251,13 @@ public class QuanZiApiImpl implements QuanZiApi {
 
         return pageInfo;
     }
+
+    @Override
+    public List<Publish> queryPublishByPIds(List<Long> pids) {
+
+        Criteria criteria = Criteria.where("pid").in(pids);
+        Query query = Query.query(criteria);
+        List<Publish> publishes = this.mongoTemplate.find(query, Publish.class);
+        return null;
+    }
 }

@@ -1,6 +1,8 @@
 package com.qubar.server.controller;
 
 
+import com.alibaba.dubbo.common.utils.StringUtils;
+import com.qubar.server.service.VideoMQService;
 import com.qubar.server.service.VideoService;
 import com.qubar.server.vo.PageResult;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +26,8 @@ public class VideoController {
     @Autowired
     private CommentsController commentsController;
 
+    private VideoMQService videoMQService;
+
     /**
      * 发布小视频
      *
@@ -35,8 +39,11 @@ public class VideoController {
     public ResponseEntity<Void> saveVideo(@RequestParam(value = "videoThumbnail", required = false) MultipartFile picFile,
                                           @RequestParam(value = "videoFile", required = false) MultipartFile videoFile) {
         try {
-            Boolean bool = this.videoService.saveVideo(picFile, videoFile);
-            if (bool) {
+            String videoID = this.videoService.saveVideo(picFile, videoFile);
+            if (StringUtils.isNotEmpty(videoID)) {
+
+                // video保存成功，发送一个mq消息
+                videoMQService.videoMsg(videoID);
                 return ResponseEntity.ok(null);
             }
         } catch (Exception e) {
@@ -78,7 +85,13 @@ public class VideoController {
      */
     @PostMapping("/{id}/like")
     public ResponseEntity<Long> likeComment(@PathVariable("id") String videoId) {
-        return this.movementsController.likeComment(videoId);
+        ResponseEntity<Long> longResponseEntity = this.movementsController.likeComment(videoId);
+
+        if (longResponseEntity.getStatusCode().is2xxSuccessful()) {
+            // video点赞成功，发送一个mq消息
+            videoMQService.likeVideoMsg(videoId);
+        }
+        return longResponseEntity;
     }
 
     /**
@@ -89,7 +102,13 @@ public class VideoController {
      */
     @PostMapping("/{id}/dislike")
     public ResponseEntity<Long> disLikeComment(@PathVariable("id") String videoId) {
-        return this.movementsController.disLikeComment(videoId);
+        ResponseEntity<Long> longResponseEntity = this.movementsController.disLikeComment(videoId);
+
+        if (longResponseEntity.getStatusCode().is2xxSuccessful()) {
+            // video取消点赞成功，发送一个mq消息
+            videoMQService.disLikeVideoMsg(videoId);
+        }
+        return longResponseEntity;
     }
 
     /**
@@ -118,7 +137,12 @@ public class VideoController {
     public ResponseEntity<Void> saveComments(@RequestBody Map<String, String> param,
                                              @PathVariable("id") String videoId) {
         param.put("movementId", videoId);
-        return this.commentsController.saveComments(param);
+        ResponseEntity<Void> voidResponseEntity = this.commentsController.saveComments(param);
+        if (voidResponseEntity.getStatusCode().is2xxSuccessful()) {
+            // 发送消息
+            videoMQService.commentVideoMsg(videoId);
+        }
+        return voidResponseEntity;
     }
 
     /**

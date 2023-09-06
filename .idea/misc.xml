@@ -6,11 +6,13 @@
       <list>
         <option value="$PROJECT_DIR$/pom.xml" />
         <option value="$PROJECT_DIR$/my-qubar-dubbo/my-qubar-dubbo-interface/my-qubar-recommend/pom.xml" />
+        <option value="$PROJECT_DIR$/my-qubar-recommend/pom.xml" />
       </list>
     </option>
     <option name="ignoredFiles">
       <set>
         <option value="$PROJECT_DIR$/my-qubar-dubbo-interface/pom.xml" />
+        <option value="$PROJECT_DIR$/my-qubar-recommend1/pom.xml" />
         <option value="$PROJECT_DIR$/qubar01-sso/pom.xml" />
       </set>
     </option>

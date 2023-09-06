@@ -12,17 +12,24 @@
         <module name="my-qubar-recommend" />
         <module name="my-qubar-dubbo-interface" />
         <module name="my-qubar-server" />
+        <module name="my-qubar-spark" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="my-qubar-recommend (1)" target="1.8" />
+      <module name="my-qubar-recommend1" target="1.8" />
+    </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
-      <module name="bishe00" options="" />
+      <module name="bishe00" options="-parameters" />
       <module name="my-qubar-dubbo" options="" />
       <module name="my-qubar-dubbo-interface" options="-parameters" />
       <module name="my-qubar-dubbo-service" options="-parameters" />
       <module name="my-qubar-recommend" options="-parameters" />
+      <module name="my-qubar-recommend1" options="-parameters" />
       <module name="my-qubar-server" options="-parameters" />
+      <module name="my-qubar-spark" options="-parameters" />
       <module name="my-qubar-sso" options="-parameters" />
     </option>
   </component>

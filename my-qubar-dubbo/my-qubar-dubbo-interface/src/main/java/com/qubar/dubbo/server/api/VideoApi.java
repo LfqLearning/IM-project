@@ -3,6 +3,8 @@ package com.qubar.dubbo.server.api;
 import com.qubar.dubbo.server.pojo.Video;
 import com.qubar.dubbo.server.vo.PageInfo;
 
+import java.util.List;
+
 public interface VideoApi {
 
     /**
@@ -11,7 +13,7 @@ public interface VideoApi {
      * @param video
      * @return
      */
-    Boolean saveVideo(Video video);
+    String saveVideo(Video video);
 
     /**
      * 分页查询小视频列表，按照时间倒序排序
@@ -56,4 +58,20 @@ public interface VideoApi {
      * @return
      */
     Long queryFollowUserCount(Long followUserId);
+
+    /**
+     *  根据Id查询小视频
+     *
+     * @param videoId
+     * @return
+     */
+    Video queryVideoById(String videoId);
+
+    /**
+     *  根据vids批量查询视频列表
+     *
+     * @param vidList
+     * @return
+     */
+    List<Video> queryVideoListByPids(List<Long> vidList);
 }

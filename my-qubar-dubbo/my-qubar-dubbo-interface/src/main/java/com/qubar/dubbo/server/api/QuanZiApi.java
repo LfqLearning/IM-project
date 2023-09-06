@@ -4,6 +4,8 @@ import com.qubar.dubbo.server.pojo.Comment;
 import com.qubar.dubbo.server.pojo.Publish;
 import com.qubar.dubbo.server.vo.PageInfo;
 
+import java.util.List;
+
 public interface QuanZiApi {
 
     /**
@@ -105,4 +107,12 @@ public interface QuanZiApi {
      * @return
      */
     PageInfo<Comment> queryCommentListByUser(Long userId, Integer type, Integer page, Integer pageSize);
+
+    /**
+     * 根据pid集合批量查询publish
+     *
+     * @param pids
+     * @return
+     */
+    List<Publish> queryPublishByPIds(List<Long> pids);
 }

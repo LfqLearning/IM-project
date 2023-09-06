@@ -4,7 +4,6 @@ import com.alibaba.dubbo.config.annotation.Service;
 import com.qubar.dubbo.server.pojo.RecommendUser;
 import com.qubar.dubbo.server.vo.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;

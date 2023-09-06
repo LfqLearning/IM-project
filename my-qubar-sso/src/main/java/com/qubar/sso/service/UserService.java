@@ -82,7 +82,6 @@ public class UserService {
             user.setPassword(DigestUtils.md5Hex("123456"));
             this.userMapper.insert(user); //插入数据库后，ID会回写到userMapper中?
             isNew = true;
-
             //注册用户到环信平台
             this.huanXinService.register(user.getId());
         }

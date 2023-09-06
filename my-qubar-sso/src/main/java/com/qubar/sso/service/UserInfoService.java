@@ -78,7 +78,7 @@ public class UserInfoService {
         UserInfo userInfo = new UserInfo();
         userInfo.setLogo(uploadResult.getName());
 
-        QueryWrapper queryWrapper = new QueryWrapper();
+        QueryWrapper<UserInfo> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("user_id", user.getId());
 
         this.userInfoMapper.update(userInfo, queryWrapper);

@@ -5,9 +5,12 @@ import com.qubar.dubbo.server.pojo.RecommendUser;
 import com.qubar.dubbo.server.vo.PageInfo;
 import com.qubar.server.pojo.User;
 import com.qubar.server.pojo.UserInfo;
+import com.qubar.server.utils.UserThreadLocal;
 import com.qubar.server.vo.PageResult;
 import com.qubar.server.vo.RecommendUserQueryParam;
 import com.qubar.server.vo.TodayBest;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.RandomUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -22,12 +25,18 @@ public class TodayBestService {
 
     @Autowired
     private UserService userService;
+
     @Autowired
     private RecommendUserService recommendUserService;
+
     @Autowired
     private UserInfoService userInfoService;
+
     @Value("${qubar.sso.default.user}")
     private Long defaultUserId;
+
+    @Value("${qubar.sso.default.recommend.users}")
+    private String defaultRecommendUsers;
 
     public TodayBest queryTodayBest(String token) {
         //根据token查询当前登录的用户信息
@@ -66,15 +75,33 @@ public class TodayBestService {
         return todayBest;
     }
 
+    /**
+     *  查询推荐用户列表
+     *
+     * @param queryParam
+     * @param token
+     * @return
+     */
     public PageResult queryRecommendUserList(RecommendUserQueryParam queryParam, String token) {
         // 根据token查询当前登录的用户信息
-        User user = this.userService.queryUserByToken(token);
-        if (user == null) {
-            return null;
-        }
+
+            User user = UserThreadLocal.get();
 
         PageInfo<RecommendUser> pageInfo = this.recommendUserService.queryRecommendUserList(user.getId(), queryParam.getPage(), queryParam.getPagesize());
         List<RecommendUser> records = pageInfo.getRecords();
+
+        // 如果未查询到，需要使用默认推荐列表
+        if (CollectionUtils.isEmpty(records)) {
+            String[] defaultRecommendUsers = StringUtils.split(this.defaultRecommendUsers, ",");
+            for (String defaultRecommendUser : defaultRecommendUsers) {
+                RecommendUser recommendUser = new RecommendUser();
+                recommendUser.setUserId(Long.valueOf(defaultRecommendUser));
+                recommendUser.setToUserId(user.getId());
+                recommendUser.setScore(RandomUtils.nextDouble(70, 95));
+
+                records.add(recommendUser);
+            }
+        }
         List<Long> userIds = new ArrayList<>();
         for (RecommendUser recommendUser : records) {
             userIds.add(recommendUser.getUserId());

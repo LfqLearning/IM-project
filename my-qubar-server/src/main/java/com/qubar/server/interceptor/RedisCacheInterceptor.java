@@ -14,6 +14,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Map;
 
+/**
+ * 请求正式执行前，进行请求缓存查询（是否是同一个请求，如果是，则在缓存中查询，不是则执行service服务）
+ */
 @Component
 public class RedisCacheInterceptor implements HandlerInterceptor {
 

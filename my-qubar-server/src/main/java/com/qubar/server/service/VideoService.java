@@ -55,7 +55,7 @@ public class VideoService {
      * @param videoFile
      * @return
      */
-    public Boolean saveVideo(MultipartFile picFile, MultipartFile videoFile) {
+    public String saveVideo(MultipartFile picFile, MultipartFile videoFile) {
 
         User user = UserThreadLocal.get();
 
@@ -79,7 +79,7 @@ public class VideoService {
             e.printStackTrace();
         }
 
-        return false;
+        return null;
     }
 
     /**
@@ -99,10 +99,11 @@ public class VideoService {
         pageResult.setPages(0);
         pageResult.setCounts(0);
 
-        PageInfo<Video> pageInfo = this.videoApi.queryVideoList(page, pageSize);
+        PageInfo<Video> pageInfo = null;
+
 
         // TODO 关闭小视频redis查询，稍后打开
-/*        //先从Redis进行命中，如果命中则返回推荐列表，如果未命中查询默认列表
+        //先从Redis进行命中，如果命中则返回推荐列表，如果未命中查询默认列表
         String redisValue = this.redisTemplate.opsForValue().get("QUANZI_VIDEO_RECOMMEND_" + user.getId());
         if (StringUtils.isNotEmpty(redisValue)) {
             String[] vids = StringUtils.split(redisValue, ',');
@@ -126,7 +127,7 @@ public class VideoService {
 
         if (null == pageInfo) {
             pageInfo = this.videoApi.queryVideoList(page, pageSize);
-        }*/
+        }
 
         List<Video> records = pageInfo.getRecords();
         List<VideoVo> videoVoList = new ArrayList<>();
@@ -199,6 +200,7 @@ public class VideoService {
 
         return pageResult;
     }
+
 
     public Boolean followUser(Long videoAuthorId) {//TODO 关注总数没完成
 

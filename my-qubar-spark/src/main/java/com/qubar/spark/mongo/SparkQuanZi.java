@@ -3,7 +3,6 @@ package com.qubar.spark.mongo;
 
 import com.mongodb.spark.MongoSpark;
 import com.mongodb.spark.rdd.api.java.JavaMongoRDD;
-import lombok.val;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaPairRDD;
@@ -75,8 +74,8 @@ public class SparkQuanZi {
         // 连接redis，做缓存
         Set<HostAndPort> nodes = new HashSet<>();
         String redisClusterAddress = properties.getProperty("redis.cluster.nodes");
-        String[] redisIPPorts = StringUtils.split(redisClusterAddress,",");
-        for (String s: redisIPPorts) {
+        String[] redisIPPorts = StringUtils.split(redisClusterAddress, ",");
+        for (String s : redisIPPorts) {
             String[] redisIPPort = StringUtils.split(s, ":");
             nodes.add(new HostAndPort(redisIPPort[0], Integer.parseInt(redisIPPort[1])));
         }

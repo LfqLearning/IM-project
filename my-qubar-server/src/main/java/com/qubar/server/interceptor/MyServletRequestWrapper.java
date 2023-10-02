@@ -18,7 +18,7 @@ public class MyServletRequestWrapper extends HttpServletRequestWrapper {
 
     /**
      * Construct a wrapper for the specified request.
-     *对requestBody进行包装处理
+     * 对requestBody进行包装处理
      *
      * @param request The request to be wrapped
      */
@@ -73,8 +73,8 @@ public class MyServletRequestWrapper extends HttpServletRequestWrapper {
 
         @Override
         public boolean isReady() {
-        // This implementation will never block
-        // We also never need to call the readListener from this method, as this method will never return false
+            // This implementation will never block
+            // We also never need to call the readListener from this method, as this method will never return false
             return isFinished();
         }
 

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>my-qubar-dubbo</artifactId>
@@ -17,7 +17,74 @@
     </properties>
 
     <dependencies>
-<!--        <dependency>
+        <!--        <dependency>
+                    <groupId>org.example</groupId>
+                    <artifactId>my-qubar-dubbo-interface</artifactId>
+                    <version>1.0-SNAPSHOT</version>
+                </dependency>
+
+                <dependency>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter</artifactId>
+                </dependency>
+                <dependency>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-test</artifactId>
+                    <scope>test</scope>
+                </dependency>
+                &lt;!&ndash;dubbo的springboot支持&ndash;&gt;
+                <dependency>
+                    <groupId>com.alibaba.boot</groupId>
+                    <artifactId>dubbo-spring-boot-starter</artifactId>
+                    <version>0.2.1.RELEASE</version>
+                </dependency>
+                &lt;!&ndash;dubbo框架&ndash;&gt;
+                <dependency>
+                    <groupId>com.alibaba</groupId>
+                    <artifactId>dubbo</artifactId>
+                    <version>2.6.12</version>
+                </dependency>
+                &lt;!&ndash;zk依赖&ndash;&gt;
+                <dependency>
+                    <groupId>org.apache.zookeeper</groupId>
+                    <artifactId>zookeeper</artifactId>
+                    <version>3.8.1</version>
+                </dependency>
+                <dependency>
+                    <groupId>com.github.sgroschupf</groupId>
+                    <artifactId>zkclient</artifactId>
+                    <version>0.1</version>
+                </dependency>
+                &lt;!&ndash;MongoDB相关依赖&ndash;&gt;
+                <dependency>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-data-mongodb</artifactId>
+                </dependency>
+                <dependency>
+                    <groupId>org.mongodb</groupId>
+                    <artifactId>mongodb-driver-sync</artifactId>
+                    <version>4.9.0</version>
+                </dependency>
+
+                &lt;!&ndash;其他工具包依赖&ndash;&gt;
+                <dependency>
+                    <groupId>org.apache.commons</groupId>
+                    <artifactId>commons-lang3</artifactId>
+                </dependency>
+                <dependency>
+                    <groupId>joda-time</groupId>
+                    <artifactId>joda-time</artifactId>
+                    <version>2.9.9</version>
+                </dependency>
+
+                <dependency>
+                    <groupId>io.netty</groupId>
+                    <artifactId>netty-all</artifactId>
+                    <version>4.1.32.Final</version>
+                </dependency>
+            </dependencies>-->
+
+        <dependency>
             <groupId>org.example</groupId>
             <artifactId>my-qubar-dubbo-interface</artifactId>
             <version>1.0-SNAPSHOT</version>
@@ -25,71 +92,8 @@
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter</artifactId>
+            <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
-        </dependency>
-        &lt;!&ndash;dubbo的springboot支持&ndash;&gt;
-        <dependency>
-            <groupId>com.alibaba.boot</groupId>
-            <artifactId>dubbo-spring-boot-starter</artifactId>
-            <version>0.2.1.RELEASE</version>
-        </dependency>
-        &lt;!&ndash;dubbo框架&ndash;&gt;
-        <dependency>
-            <groupId>com.alibaba</groupId>
-            <artifactId>dubbo</artifactId>
-            <version>2.6.12</version>
-        </dependency>
-        &lt;!&ndash;zk依赖&ndash;&gt;
-        <dependency>
-            <groupId>org.apache.zookeeper</groupId>
-            <artifactId>zookeeper</artifactId>
-            <version>3.8.1</version>
-        </dependency>
-        <dependency>
-            <groupId>com.github.sgroschupf</groupId>
-            <artifactId>zkclient</artifactId>
-            <version>0.1</version>
-        </dependency>
-        &lt;!&ndash;MongoDB相关依赖&ndash;&gt;
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-mongodb</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.mongodb</groupId>
-            <artifactId>mongodb-driver-sync</artifactId>
-            <version>4.9.0</version>
-        </dependency>
-
-        &lt;!&ndash;其他工具包依赖&ndash;&gt;
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>joda-time</groupId>
-            <artifactId>joda-time</artifactId>
-            <version>2.9.9</version>
-        </dependency>
-
-        <dependency>
-            <groupId>io.netty</groupId>
-            <artifactId>netty-all</artifactId>
-            <version>4.1.32.Final</version>
-        </dependency>
-    </dependencies>-->
-
-        <dependency>
-            <groupId>org.example</groupId>
-            <artifactId>my-qubar-dubbo-interface</artifactId>
-            <version>1.0-SNAPSHOT</version>
-        </dependency>
-
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter</artifactId>
@@ -118,10 +122,10 @@
             <artifactId>dubbo-spring-boot-starter</artifactId>
             <version>0.2.0</version>
             <exclusions>
-<!--                <exclusion>
-                    <groupId>com.alibaba</groupId>
-                    <artifactId>dubbo</artifactId>
-                </exclusion>-->
+                <!--            <exclusion>
+                                    <groupId>com.alibaba</groupId>
+                                    <artifactId>dubbo</artifactId>
+                                </exclusion>-->
                 <exclusion>
                     <groupId>org.apache.zookeeper</groupId>
                     <artifactId>zookeeper</artifactId>
@@ -139,7 +143,7 @@
             <groupId>org.apache.zookeeper</groupId>
             <artifactId>zookeeper</artifactId>
             <version>3.4.13</version>
-<!--排除slf4j-log4j12依赖-->
+            <!--排除slf4j-log4j12依赖-->
             <exclusions>
                 <exclusion>
                     <groupId>org.slf4j</groupId>

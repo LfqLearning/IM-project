@@ -15,13 +15,13 @@ public class TestRecommendUserApi {
     private RecommendUserApi recommendUserApi;
 
     @Test
-    public void testQueryWithMaxScore(){
+    public void testQueryWithMaxScore() {
         RecommendUser recommendUser = this.recommendUserApi.queryWithMaxScore(1L);
         System.out.println(recommendUser);
     }
 
     @Test
-    public void testList(){
+    public void testList() {
         System.out.println(this.recommendUserApi.queryPageInfo(1L, 1, 5));
         System.out.println(this.recommendUserApi.queryPageInfo(1L, 2, 5));
         System.out.println(this.recommendUserApi.queryPageInfo(1L, 3, 5));

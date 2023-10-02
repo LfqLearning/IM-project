@@ -12,6 +12,9 @@ import org.springframework.web.servlet.HandlerInterceptor;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+/**
+ * 身份权限校验
+ */
 @Component
 public class TokenInterceptor implements HandlerInterceptor {
 
@@ -22,7 +25,7 @@ public class TokenInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 
         // 判断请求的方法是否包含了 NoAuthorization注解，如果包含了，就不需要做token验证处理
-        if (handler instanceof HandlerMethod){ // TODO 重点理解
+        if (handler instanceof HandlerMethod) { // TODO 重点理解
             HandlerMethod handlerMethod = (HandlerMethod) handler;
             NoAuthorization annotation = handlerMethod.getMethod().getAnnotation(NoAuthorization.class);
             if (null != annotation) {

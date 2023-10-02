@@ -19,7 +19,6 @@ public class PicUploadController {
     @PostMapping
     @ResponseBody
     public PicUploadResult upload(@RequestParam("file") MultipartFile multipartFile) {
-        String originalFileName = multipartFile.getOriginalFilename();
         return this.picUploadService.upload(multipartFile);
     }
 }

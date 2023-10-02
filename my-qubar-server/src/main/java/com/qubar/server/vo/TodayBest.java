@@ -5,7 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * 今日佳人
+ * 今日最佳推荐用户
  */
 @Data
 @NoArgsConstructor

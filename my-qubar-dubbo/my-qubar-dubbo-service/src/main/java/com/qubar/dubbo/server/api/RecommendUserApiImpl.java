@@ -46,10 +46,30 @@ public class RecommendUserApiImpl implements RecommendUserApi {
     public PageInfo<RecommendUser> queryPageInfo(Long userId, Integer pageNum, Integer pageSize) {
         //条件
         Criteria criteria = Criteria.where("toUserId").is(userId);
-        Pageable pageable = PageRequest.of(pageNum-1, pageSize, Sort.by(Sort.Order.desc("score")));
+        Pageable pageable = PageRequest.of(pageNum - 1, pageSize, Sort.by(Sort.Order.desc("score")));
         Query query = Query.query(criteria).with(pageable);
         List<RecommendUser> recommendUsers = this.mongoTemplate.find(query, RecommendUser.class);
         // 说明：数据总条数，暂时不提供，如果需要的话再提供
         return new PageInfo<>(0, pageNum, pageSize, recommendUsers);
+    }
+
+    /**
+     * 查询推荐用户得分
+     *
+     * @param userId
+     * @param toUserId
+     * @return
+     */
+    @Override
+    public double queryScore(Long userId, Long toUserId) {
+
+        Query query = Query.query(Criteria
+                .where("toUserId").is(toUserId)
+                .and("userId").is(userId));
+        RecommendUser recommendUser = this.mongoTemplate.findOne(query, RecommendUser.class);
+        if (null == recommendUser) {
+            return 0d;
+        }
+        return recommendUser.getScore();
     }
 }

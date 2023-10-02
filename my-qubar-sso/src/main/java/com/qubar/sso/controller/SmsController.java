@@ -20,8 +20,8 @@ public class SmsController {
     private SmsService smsService;
 
     /**
-     *
      * 发送验证码接口
+     *
      * @param params
      * @return
      */
@@ -35,7 +35,7 @@ public class SmsController {
                     .errMessage("短信发送失败");
             String phone = String.valueOf(params.get("phone"));
             Map<String, Object> sendCheckCode = smsService.sendCheckCode(phone);
-            int code = ((Integer)(sendCheckCode.get("code"))).intValue();
+            int code = ((Integer) (sendCheckCode.get("code"))).intValue();
             if (code == 3) {
                 return ResponseEntity.ok(null);
             } else if (code == 1) {

@@ -84,6 +84,7 @@ public interface QuanZiApi {
 
     /**
      * 根据userId、publishId、commentType查找指定comment数量
+     *
      * @param userId
      * @param publishId
      * @param commentType
@@ -115,4 +116,14 @@ public interface QuanZiApi {
      * @return
      */
     List<Publish> queryPublishByPIds(List<Long> pids);
+
+    /**
+     * 查询用户album
+     *
+     * @param userId
+     * @param page
+     * @param pageSize
+     * @return
+     */
+    PageInfo<Publish> queryAlbumList(Long userId, Integer page, Integer pageSize);
 }

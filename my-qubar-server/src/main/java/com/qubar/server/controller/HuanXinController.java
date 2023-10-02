@@ -19,7 +19,7 @@ public class HuanXinController {
      * @return
      */
     @GetMapping("user")
-    public ResponseEntity<HuanXinUser> queryUser(){
+    public ResponseEntity<HuanXinUser> queryUser() {
         User user = UserThreadLocal.get();
 
         HuanXinUser huanXinUser = new HuanXinUser();

@@ -28,7 +28,7 @@ public class IMController {
      * @return
      */
     @PostMapping("contacts")
-    public ResponseEntity<Void> contactUser(@RequestBody Map<String, Object> params){
+    public ResponseEntity<Void> contactUser(@RequestBody Map<String, Object> params) {
 
         try {
             Long userId = Long.valueOf(params.get("userId").toString());

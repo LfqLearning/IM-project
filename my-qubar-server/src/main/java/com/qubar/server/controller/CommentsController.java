@@ -34,8 +34,8 @@ public class CommentsController {
      */
     @GetMapping
     public ResponseEntity<PageResult> queryCommentsList(@RequestParam("movementId") String publishId,
-                                                       @RequestParam(value = "page", defaultValue = "1") Integer page,
-                                                       @RequestParam(value = "pagesize", defaultValue = "10") Integer pageSize) {
+                                                        @RequestParam(value = "page", defaultValue = "1") Integer page,
+                                                        @RequestParam(value = "pagesize", defaultValue = "10") Integer pageSize) {
         try {
             PageResult pageResult = this.commentsService.queryCommentsList(publishId, page, pageSize);
             if (null != pageResult) {

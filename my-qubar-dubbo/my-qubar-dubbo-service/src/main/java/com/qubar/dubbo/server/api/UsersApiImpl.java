@@ -15,7 +15,7 @@ import java.util.List;
 
 
 @Service(version = "1.0.0", timeout = 3000)
-public class UsersApiImpl implements UsersApi{
+public class UsersApiImpl implements UsersApi {
 
     @Autowired
     private MongoTemplate mongoTemplate;

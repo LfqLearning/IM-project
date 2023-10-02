@@ -1,7 +1,6 @@
 package com.qubar.spark.mongo;
 
 import com.mongodb.spark.MongoSpark;
-import com.mongodb.spark.rdd.api.java.JavaMongoRDD;
 import org.apache.commons.lang3.RandomUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.spark.SparkConf;
@@ -15,7 +14,6 @@ import org.apache.spark.sql.SparkSession;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.joda.time.DateTime;
-import redis.clients.jedis.Tuple;
 import scala.Tuple2;
 
 import java.io.IOException;
@@ -42,7 +40,7 @@ public class SparkUserRecommend {
 
         // 加载mysql数据
         SparkSession sparkSession = SparkSession.builder().config(sparkConf).getOrCreate();
-        String url = properties.getProperty("jdcb.rul");
+        String url = properties.getProperty("jdbc.url");
 
         // 设置数据库连接信息
         Properties connectionProperties = new Properties();

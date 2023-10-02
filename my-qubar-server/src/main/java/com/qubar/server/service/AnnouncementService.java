@@ -17,8 +17,8 @@ public class AnnouncementService {
 
     public IPage<Announcement> queryList(Integer page, Integer pageSize) {
 
-        QueryWrapper queryWrapper = new QueryWrapper();
+        QueryWrapper<Announcement> queryWrapper = new QueryWrapper<>();
         queryWrapper.orderByDesc("created");
-        return this.announcementMapper.selectPage(new Page<Announcement>(page, pageSize), queryWrapper);
+        return this.announcementMapper.selectPage(new Page<>(page, pageSize), queryWrapper);
     }
 }

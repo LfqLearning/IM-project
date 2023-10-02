@@ -15,7 +15,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document(collection = "quanzi_album")
 public class Album implements java.io.Serializable {
 
-    private static final long serialVersionUID = 432183095092216817L;
+    private static final long serialVersionUID = 654283095092216817L;
 
     private ObjectId id; //主键id
     private ObjectId publishId; //发布id

@@ -37,9 +37,9 @@ public class TestQuanZi {
     }
 
     @Test
-    public void testRecommendPublish(){
+    public void testRecommendPublish() {
         //查询用户id为2的时间表动态作为推荐动态的数据
-        PageInfo<Publish> pageInfo = this.quanZiApi.queryPublishList(2L, 1,10);
+        PageInfo<Publish> pageInfo = this.quanZiApi.queryPublishList(2L, 1, 10);
         for (Publish record : pageInfo.getRecords()) {
 
             TimeLine timeLine = new TimeLine();
@@ -81,6 +81,14 @@ public class TestQuanZi {
             recommendQuanZi.setPublishId(RandomUtils.nextLong(1000, 1099));
 
             this.mongoTemplate.save(recommendQuanZi, "recommend_quanzi_20230116");
+        }
+    }
+
+    @Test
+    public void testQueryAlbumList() {
+        PageInfo<Publish> pageInfo = this.quanZiApi.queryAlbumList(57L, 1, 10);
+        for (Publish publish : pageInfo.getRecords()) {
+            System.out.println(publish);
         }
     }
 }

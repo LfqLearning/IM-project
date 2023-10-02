@@ -20,13 +20,13 @@ public class UserController {
     private UserService userService;
 
     @PostMapping("loginVerification")
-    public ResponseEntity<Object> login(@RequestBody Map<String, String> params){
+    public ResponseEntity<Object> login(@RequestBody Map<String, String> params) {
         try {
             String mobile = params.get("phone");
             String code = params.get("verificationCode");
             String token = this.userService.login(mobile, code);
 
-            if (StringUtils.isNotEmpty(token)){
+            if (StringUtils.isNotEmpty(token)) {
                 // 登录成功
                 String[] ss = StringUtils.split(token, "|");
                 Boolean isNew = Boolean.valueOf(ss[0]);

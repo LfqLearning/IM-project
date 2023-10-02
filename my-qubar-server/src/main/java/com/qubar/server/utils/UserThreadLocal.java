@@ -6,7 +6,7 @@ public class UserThreadLocal {
 
     private static final ThreadLocal<User> LOCAL = new ThreadLocal<>();
 
-    private UserThreadLocal(){
+    private UserThreadLocal() {
 
     }
 

@@ -22,4 +22,13 @@ public interface RecommendUserApi {
      * @return
      */
     PageInfo<RecommendUser> queryPageInfo(Long userId, Integer pageNum, Integer pageSize);
+
+    /**
+     * 查询推荐好友的推荐得分
+     *
+     * @param userId
+     * @param toUserId
+     * @return
+     */
+    double queryScore(Long userId, Long toUserId);
 }

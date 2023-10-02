@@ -11,22 +11,18 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class HuanXinService {
 
+    private static final ObjectMapper MAPPER = new ObjectMapper();
     @Autowired
     private HuanXinConfig huanXinConfig;
-
     @Autowired
     private RestTemplate restTemplate;
-
     @Autowired
     private HuanXinTokenService huanXinTokenService;
-
-    private static final ObjectMapper MAPPER = new ObjectMapper();
 
     /**
      * 注册环信用户
@@ -89,6 +85,44 @@ public class HuanXinService {
             e.printStackTrace();
         }
         // 添加失败
+        return false;
+    }
+
+    public Boolean sendMsg(String target, String msg, String type) {
+
+        String targetUrl = this.huanXinConfig.getUrl()
+                + this.huanXinConfig.getOrgName() + "/"
+                + this.huanXinConfig.getAppName() + "/messages";
+
+        try {
+            String token = this.huanXinTokenService.getToken();
+            //请求头
+            HttpHeaders headers = new HttpHeaders();
+            headers.add("Content-Type", "application/json");
+            headers.add("Authorization", "Bearer" + token);
+
+            Map<String, Object> requestParam = new HashMap<>();
+            requestParam.put("target_type", "users");
+            requestParam.put("target", Arrays.asList(target));
+
+            Map<String, Object> msgParam = new HashMap<>();
+            msgParam.put("msg", msg);
+            msgParam.put("type", type);
+
+            requestParam.put("msg", msgParam);
+            // 表示消息发送者，若无此字段Server会默认设置 “from”：“admin”，有from字段但值为空串（“”）时请求失败
+            //requestParam.put("from", null);
+
+            // 包装一个http请求，包括字符串类型的请求体，与httpHeader类型的请求头
+            HttpEntity<String> httpEntity = new HttpEntity<>(MAPPER.writeValueAsString(requestParam), headers);
+
+            ResponseEntity<String> stringResponseEntity = restTemplate.postForEntity(targetUrl, httpEntity, String.class);
+            return stringResponseEntity.getStatusCodeValue() == 200;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         return false;
     }
 }

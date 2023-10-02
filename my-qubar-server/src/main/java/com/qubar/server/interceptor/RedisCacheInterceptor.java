@@ -28,6 +28,32 @@ public class RedisCacheInterceptor implements HandlerInterceptor {
     @Value("${qubar.cache.enable}")
     private Boolean enable;
 
+    /**
+     * TODO requestBody数据二次包装还未处理--很重要！！！
+     * 创建一个redisKey，用于做缓存命中
+     *
+     * @param request
+     * @return
+     * @throws Exception
+     */
+    public static String createRedisKey(HttpServletRequest request) throws Exception {
+
+        String paramStr = request.getRequestURI();
+        Map<String, String[]> parameterMap = request.getParameterMap();
+        if (parameterMap.isEmpty()) {
+            //请求体的数据只能读取一次，需要进行包装Request进行解决
+            paramStr += IOUtils.toString(request.getInputStream(), "UTF-8");
+        } else {
+            paramStr += mapper.writeValueAsString(request.getParameterMap());
+        }
+
+        String authorization = request.getHeader("Authorization");
+        if (StringUtils.isNotEmpty((authorization))) {
+            paramStr += "_" + authorization;
+        }
+        return "SERVER_DATA_" + DigestUtils.md5Hex(paramStr);
+    }
+
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 
@@ -55,31 +81,5 @@ public class RedisCacheInterceptor implements HandlerInterceptor {
         response.setContentType("application/json; charset=utf-8");
         response.getWriter().write(data);
         return false;
-    }
-
-    /**
-     * TODO requestBody数据二次包装还未处理--很重要！！！
-     * 创建一个redisKey，用于做缓存命中
-     *
-     * @param request
-     * @return
-     * @throws Exception
-     */
-    public static String createRedisKey(HttpServletRequest request) throws Exception {
-
-        String paramStr = request.getRequestURI();
-        Map<String, String[]> parameterMap = request.getParameterMap();
-        if (parameterMap.isEmpty()) {
-            //请求体的数据只能读取一次，需要进行包装Request进行解决
-            paramStr += IOUtils.toString(request.getInputStream(), "UTF-8");
-        } else {
-            paramStr += mapper.writeValueAsString(request.getParameterMap());
-        }
-
-        String authorization = request.getHeader("Authorization");
-        if (StringUtils.isNotEmpty((authorization))) {
-            paramStr += "_" + authorization;
-        }
-        return "SERVER_DATA_" + DigestUtils.md5Hex(paramStr);
     }
 }

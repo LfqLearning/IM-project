@@ -33,8 +33,27 @@ public class RecommendUserService {
         return todayBest;
     }
 
+    /**
+     * 按照当前用户ID查询推荐用户
+     *
+     * @param id
+     * @param page
+     * @param pageSize
+     * @return
+     */
     public PageInfo<RecommendUser> queryRecommendUserList(Long id, Integer page, Integer pageSize) {
 
         return this.recommendUserApi.queryPageInfo(id, page, pageSize);
+    }
+
+    /**
+     * 查询推荐用户得分
+     *
+     * @param userId
+     * @param toUserId
+     * @return
+     */
+    public double queryScore(Long userId, Long toUserId) {
+        return this.recommendUserApi.queryScore(userId, toUserId);
     }
 }

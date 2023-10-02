@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import java.util.Objects;
 
 /**
- *  原理：使用Redis的自增长类型，实现自增长的Id
+ * 原理：使用Redis的自增长类型，实现自增长的Id
  */
 @Service
 public class IdService {
@@ -18,6 +18,7 @@ public class IdService {
 
     /**
      * 生成自增长的id
+     *
      * @return
      */
     public Long createId(String type, String objectId) {
@@ -26,7 +27,7 @@ public class IdService {
 
         String hashKey = "QUBAR_HASH_ID_" + type;
         // 如果ObjectId已经存在就返回对应Id
-        if(this.redisTemplate.opsForHash().hasKey(hashKey, objectId)){
+        if (this.redisTemplate.opsForHash().hasKey(hashKey, objectId)) {
             return Long.parseLong(Objects.requireNonNull(this.redisTemplate.opsForHash().get(hashKey, objectId)).toString());
         }
 

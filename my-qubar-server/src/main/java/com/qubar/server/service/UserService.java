@@ -17,15 +17,14 @@ import java.io.IOException;
 @Service
 public class UserService {
 
+    private static final ObjectMapper MAPPER = new ObjectMapper();
     @Autowired
     private RestTemplate restTemplate;
     @Value("${qubar.sso.url}")
     private String url;
 
-    private static final ObjectMapper MAPPER = new ObjectMapper();
-
     /**
-     *调用SSO系统中的接口服务进行查询
+     * 调用SSO系统中的接口服务进行查询
      *
      * @param token
      * @return 如果查询到就返回user，未查询到返回null

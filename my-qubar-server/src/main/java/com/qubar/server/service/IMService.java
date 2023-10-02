@@ -56,7 +56,7 @@ public class IMService {
         users.setUserId(UserThreadLocal.get().getId());
         users.setFriendId(friendId);
 
-        // 1、保存数据到MongoDB
+        // 1、保存数据到MongoDB,好友库中，保存成功，则成为好友
         this.usersApi.saveUsers(users);
 
         // 2、好友关系注册到环信

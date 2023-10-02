@@ -1,5 +1,6 @@
 package com.qubar.dubbo.server.api;
 
+import com.alibaba.dubbo.common.utils.CollectionUtils;
 import com.alibaba.dubbo.config.annotation.Service;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.lang.Nullable;
@@ -260,4 +261,36 @@ public class QuanZiApiImpl implements QuanZiApi {
         List<Publish> publishes = this.mongoTemplate.find(query, Publish.class);
         return null;
     }
+
+    @Override
+    public PageInfo<Publish> queryAlbumList(Long userId, Integer page, Integer pageSize) {
+
+        PageInfo<Publish> pageInfo = new PageInfo<>();
+        pageInfo.setPageNum(page);
+        pageInfo.setPageSize(pageSize);
+        pageInfo.setTotal(0);//不提供总数
+
+// page - 1 = 0,默认查询第一页的数据
+        Pageable pageable = PageRequest.of(page - 1, pageSize, Sort.by(Sort.Order.desc("created")));
+        Query query = new Query().with(pageable);
+        List<Album> albumList = this.mongoTemplate.find(query, Album.class, "quanzi_album_" + userId);
+
+        if (CollectionUtils.isEmpty(albumList)) {
+            return pageInfo;
+        }
+
+        //查询相册所对应的动态信息
+        List<ObjectId> publishIds = new ArrayList<>();
+        for (Album album : albumList) {
+            publishIds.add(album.getPublishId());
+        }
+
+        Query publishQuery = Query.query(Criteria.where("id").in(publishIds)).with(Sort.by(Sort.Order.desc("created")));
+        List<Publish> publishList = this.mongoTemplate.find(publishQuery, Publish.class);
+
+        pageInfo.setRecords(publishList);
+
+        return pageInfo;
+    }
+
 }

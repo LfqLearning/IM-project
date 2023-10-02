@@ -1,11 +1,11 @@
 package com.qubar.sso.service;
 
-import org.apache.commons.lang3.RandomUtils;
-import org.joda.time.DateTime;
 import com.aliyun.oss.OSSClient;
 import com.qubar.sso.config.AliyunConfig;
 import com.qubar.sso.vo.PicUploadResult;
+import org.apache.commons.lang3.RandomUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;

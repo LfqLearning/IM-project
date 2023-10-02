@@ -190,6 +190,7 @@ public class VideoController {
 
     /**
      * 取消对视频作者的关注
+     *
      * @param videoAuthorId
      * @return
      */

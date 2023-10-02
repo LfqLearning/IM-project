@@ -7,12 +7,13 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <module name="my-qubar-server" />
+        <module name="my-qubar-spark" />
+        <module name="my-qubar-elasticsearch" />
         <module name="my-qubar-sso" />
         <module name="my-qubar-dubbo-service" />
         <module name="my-qubar-recommend" />
         <module name="my-qubar-dubbo-interface" />
-        <module name="my-qubar-server" />
-        <module name="my-qubar-spark" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
@@ -22,10 +23,11 @@
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
-      <module name="bishe00" options="-parameters" />
+      <module name="bishe00" options="" />
       <module name="my-qubar-dubbo" options="" />
       <module name="my-qubar-dubbo-interface" options="-parameters" />
       <module name="my-qubar-dubbo-service" options="-parameters" />
+      <module name="my-qubar-elasticsearch" options="-parameters" />
       <module name="my-qubar-recommend" options="-parameters" />
       <module name="my-qubar-recommend1" options="-parameters" />
       <module name="my-qubar-server" options="-parameters" />

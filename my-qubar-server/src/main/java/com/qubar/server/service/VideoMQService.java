@@ -1,7 +1,6 @@
 package com.qubar.server.service;
 
 import com.alibaba.dubbo.config.annotation.Reference;
-
 import com.qubar.dubbo.server.api.VideoApi;
 import com.qubar.dubbo.server.pojo.Video;
 import com.qubar.server.pojo.User;

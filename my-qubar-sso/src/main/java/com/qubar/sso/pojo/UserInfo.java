@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserInfo extends BasePojo{
+public class UserInfo extends BasePojo {
 
     private Long id;
     private Long userId; //用户

@@ -1,7 +1,6 @@
 package com.qubar.sso.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.qubar.sso.mapper.UserMapper;
 import com.qubar.sso.pojo.User;
@@ -15,8 +14,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.messaging.MessagingException;
 import org.springframework.stereotype.Service;
+
 import java.time.Duration;
 import java.util.Date;
 import java.util.HashMap;
@@ -30,23 +29,17 @@ import java.util.concurrent.TimeUnit;
 public class UserService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UserService.class);
-
+    private static final ObjectMapper MAPPER = new ObjectMapper();
     @Autowired
     private RedisTemplate<String, String> redisTemplate;
-
     @Autowired(required = false) //userMapper注入报错，解决方案网址——https://blog.csdn.net/ybsgsg/article/details/118936552
     private UserMapper userMapper;
-
     @Value("${jwt.secret}")
     private String secret;
-
     @Autowired
     private RocketMQTemplate rocketMQTemplate;//TODO RocketMQ消息
-
     @Autowired
     private HuanXinService huanXinService;
-
-    private static final ObjectMapper MAPPER = new ObjectMapper();
 
     /**
      * 短信验证码登录校验
@@ -67,6 +60,9 @@ public class UserService {
             // 验证码输入错误
             return null;
         }
+
+        // 验证码正确,删除验证码缓存
+        this.redisTemplate.delete(redisKey);
 
         Boolean isNew = false; // 默认是已注册
 
@@ -139,5 +135,28 @@ public class UserService {
             e.printStackTrace();
         }
         return null;
+    }
+
+    /**
+     * 更改用户手机号
+     *
+     * @param id
+     * @param newPhone
+     * @return
+     */
+    public Boolean updateNewMobile(Long id, String newPhone) {
+        //校验新手机号是否已经注册
+        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("mobile", newPhone);
+        User oldUser = this.userMapper.selectOne(queryWrapper);
+        if (null != oldUser) {
+            // 该手机号已经注册
+            return false;
+        }
+
+        User user = new User();
+        user.setId(id);
+        user.setMobile(newPhone);
+        return this.userMapper.updateById(user) > 0;
     }
 }

@@ -6,6 +6,7 @@ import lombok.Data;
 
 import java.util.Date;
 
+//TODO 字段自动填充，很重要！！！
 @Data
 public abstract class BasePojo {
 

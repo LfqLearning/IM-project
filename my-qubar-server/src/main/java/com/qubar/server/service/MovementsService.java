@@ -1,11 +1,12 @@
 package com.qubar.server.service;
 
-import com.alibaba.dubbo.common.utils.CollectionUtils;
-import com.alibaba.dubbo.common.utils.StringUtils;
+
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.qubar.dubbo.server.api.QuanZiApi;
+import com.qubar.dubbo.server.api.VisitorsApi;
 import com.qubar.dubbo.server.pojo.Publish;
+import com.qubar.dubbo.server.pojo.Visitors;
 import com.qubar.dubbo.server.vo.PageInfo;
 import com.qubar.server.pojo.User;
 import com.qubar.server.pojo.UserInfo;
@@ -14,16 +15,15 @@ import com.qubar.server.utils.UserThreadLocal;
 import com.qubar.server.vo.Movements;
 import com.qubar.server.vo.PageResult;
 import com.qubar.server.vo.PicUploadResult;
-import com.sun.org.apache.xml.internal.resolver.helpers.PublicId;
+import com.qubar.server.vo.VisitorsVo;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class MovementsService {
@@ -43,6 +43,9 @@ public class MovementsService {
     @Autowired
     private RedisTemplate<String, String> redisTemplate;
 
+    @Reference(version = "1.0.0")
+    private VisitorsApi visitorsApi;
+
     /**
      * 发布动态
      *
@@ -54,10 +57,10 @@ public class MovementsService {
      * @return
      */
     public String saveMovements(String textContent,
-                                 String location,
-                                 String longitude,
-                                 String latitude,
-                                 MultipartFile[] multipartFiles) {
+                                String location,
+                                String longitude,
+                                String latitude,
+                                MultipartFile[] multipartFiles) {
        /* User user = this.userService.queryUserByToken(token);
         if (null == user) {
             return false;
@@ -116,7 +119,7 @@ public class MovementsService {
                     }
 
                     List<Long> pidList = new ArrayList<>();
-                    for (int i = startIndex; i <= endIndex; i++){
+                    for (int i = startIndex; i <= endIndex; i++) {
                         pidList.add(Long.valueOf(pids[i]));
                     }
 
@@ -177,9 +180,10 @@ public class MovementsService {
                 userIds.add(record.getUserId());
             }
 
-            // 点赞标记处理
+            //TODO 点赞标记处理,
             String likeCommentKey = "QUANZI_COMMENT_LIKE_USER_" + user.getId() + "_" + movements.getId();//movements.getId()就是publishId
-            if (Boolean.TRUE.equals(this.redisTemplate.hasKey(likeCommentKey))) {
+            movements.setHasLiked(this.redisTemplate.hasKey(likeCommentKey) ? 1 : 0);
+            /*if (Boolean.TRUE.equals(this.redisTemplate.hasKey(likeCommentKey))) {
                 movements.setHasLiked(1);//是否点赞
             } else {
                 Long likeCount = this.quanZiApi.queryCommentCountByUserIdAndPublishId(user.getId(), movements.getId(), 1);
@@ -188,11 +192,18 @@ public class MovementsService {
                 } else {
                     movements.setHasLiked(0);
                 }
-            }
+            }*/
 
             String likeCommentCountKey = "QUANZI_COMMENT_LIKE_" + movements.getId();
-            String likeCommentCountInRedis = this.redisTemplate.opsForValue().get(likeCommentCountKey);
-            if (StringUtils.isNotEmpty(likeCommentCountInRedis)) {
+            String value = this.redisTemplate.opsForValue().get(likeCommentCountKey);
+            if (StringUtils.isNotEmpty(value)) {
+                movements.setLikeCount(Integer.valueOf(value)); //点赞数
+            } else {
+                movements.setLikeCount(0); //点赞数
+            }
+
+           /* String likeCommentCountInRedis = this.redisTemplate.opsForValue().get(likeCommentCountKey);
+           if (StringUtils.isNotEmpty(likeCommentCountInRedis)) {
                 movements.setLikeCount(Integer.valueOf(likeCommentCountInRedis));
             }  else {
                 Long commentCount = this.quanZiApi.queryCommentCount(movements.getId(), 1);
@@ -201,11 +212,12 @@ public class MovementsService {
                 } else {
                     movements.setLoveCount(0);
                 }
-            }
+            }*/
 
             // 喜欢标记处理
             String lovedCommentKey = "QUANZI_COMMENT_LOVE_USER_" + user.getId() + "_" + movements.getId();//movements.getId()就是publishId
-            if (Boolean.TRUE.equals(this.redisTemplate.hasKey(lovedCommentKey))) {
+            movements.setHasLoved(this.redisTemplate.hasKey(lovedCommentKey) ? 1 : 0); //是否喜欢
+            /*if (Boolean.TRUE.equals(this.redisTemplate.hasKey(lovedCommentKey))) {
                 movements.setHasLoved(1);//是否喜欢
             } else {
                 Long loveCount = this.quanZiApi.queryCommentCountByUserIdAndPublishId(user.getId(), movements.getId(), 3);
@@ -214,10 +226,16 @@ public class MovementsService {
                 } else {
                     movements.setHasLiked(0);
                 }
-            }
+            }*/
 
             String lovedCommentCountKey = "QUANZI_COMMENT_LOVE_" + movements.getId();
-            String lovedCommentCountInRedis = this.redisTemplate.opsForValue().get(lovedCommentCountKey);
+            String loveValue = this.redisTemplate.opsForValue().get(lovedCommentCountKey);
+            if (StringUtils.isNotEmpty(loveValue)) {
+                movements.setLoveCount(Integer.valueOf(loveValue)); //喜欢数
+            } else {
+                movements.setLoveCount(0); //喜欢数
+            }
+            /*String lovedCommentCountInRedis = this.redisTemplate.opsForValue().get(lovedCommentCountKey);
             if (StringUtils.isNotEmpty(lovedCommentCountInRedis)) {
                 movements.setLoveCount(Integer.valueOf(lovedCommentCountInRedis));
             } else {
@@ -227,7 +245,7 @@ public class MovementsService {
                 } else {
                     movements.setLoveCount(0);
                 }
-            }
+            }*/
 
             movements.setDistance("1.2公里"); //TODO 距离
             movements.setCommentCount(30); //TODO 评论数
@@ -274,6 +292,7 @@ public class MovementsService {
 
     /**
      * 查询用户好友publish列表——自己维护的时间线表
+     *
      * @param page
      * @param pageSize
      * @return
@@ -406,4 +425,85 @@ public class MovementsService {
         List<Movements> movementsList = this.fillValueToMovements(Arrays.asList(publish));
         return movementsList.get(0);
     }
+
+    /**
+     * 查询访问过我的用户
+     *
+     * @return
+     */
+    public List<VisitorsVo> queryVisitorsList() {
+
+        User user = UserThreadLocal.get();
+
+        // 如果redis中存在上一次查询的时间点的话，就按照时间查询，否则就按照数量查询
+        String redisKey = "visitors_" + user.getId();
+        String data = this.redisTemplate.opsForValue().get(redisKey);
+        List<Visitors> visitorsList = null;
+        if (StringUtils.isEmpty(data)) {
+            visitorsList = visitorsApi.topVisitor(user.getId(), 6);
+        } else {
+            visitorsList = visitorsApi.topVisitor(user.getId(), Long.valueOf(data));
+        }
+
+        if (CollectionUtils.isEmpty(visitorsList)) {
+            return Collections.emptyList();
+        }
+
+        List<Long> userIds = new ArrayList<>();
+        for (Visitors visitors : visitorsList) {
+            userIds.add(visitors.getVisitorUserId());
+        }
+
+        QueryWrapper<UserInfo> queryWrapper = new QueryWrapper<>();
+        queryWrapper.in("user_id", userIds);
+        List<UserInfo> userInfoList = this.userInfoService.queryUserInfoList(queryWrapper);
+
+        List<VisitorsVo> visitorsVoList = new ArrayList<>();
+
+        for (Visitors visitors : visitorsList) {
+            for (UserInfo userInfo : userInfoList) {
+                if (visitors.getVisitorUserId().longValue() == userInfo.getUserId().longValue()) {
+                    VisitorsVo visitorsVo = new VisitorsVo();
+
+                    visitorsVo.setAge(userInfo.getAge());
+                    visitorsVo.setAvatar(userInfo.getLogo());
+                    visitorsVo.setGender(userInfo.getSex().name().toLowerCase());
+                    visitorsVo.setId(userInfo.getUserId());
+                    visitorsVo.setNickname(userInfo.getNickName());
+                    visitorsVo.setTags(StringUtils.split(userInfo.getTags(), ','));
+                    visitorsVo.setFateValue(visitors.getScore().intValue());
+
+                    visitorsVoList.add(visitorsVo);
+                    break;
+                }
+            }
+        }
+        return visitorsVoList;
+    }
+
+    /**
+     * 在用户album中查询用户发布的所有动态
+     *
+     * @param userId
+     * @param page
+     * @param pageSize
+     * @return
+     */
+    public PageResult queryAlbumList(Long userId, Integer page, Integer pageSize) {
+
+        PageResult pageResult = new PageResult();
+        pageResult.setPage(page);
+        pageResult.setPagesize(pageSize);
+
+        PageInfo<Publish> albumPageInfo = this.quanZiApi.queryAlbumList(userId, page, pageSize);
+        List<Publish> records = albumPageInfo.getRecords();
+
+        if (CollectionUtils.isEmpty(records)) {
+            return pageResult;
+        }
+
+        pageResult.setItems(this.fillValueToMovements(records));
+        return pageResult;
+    }
+
 }

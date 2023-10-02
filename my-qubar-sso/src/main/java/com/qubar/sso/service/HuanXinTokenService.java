@@ -15,21 +15,18 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+//TODO 环信服务
 @Service
 public class HuanXinTokenService {
 
+    private static final String tokenRedisKey = "HUANXIN_TOKEN";
+    private static final ObjectMapper MAPPER = new ObjectMapper();
     @Autowired
     private HuanXinConfig huanXinConfig;
-
     @Autowired
     private RestTemplate restTemplate;
-
     @Autowired
     private RedisTemplate<String, String> redisTemplate;
-
-    private static final String tokenRedisKey= "HUANXIN_TOKEN";
-
-    private static final ObjectMapper MAPPER = new ObjectMapper();
 
     public String getToken() {
 

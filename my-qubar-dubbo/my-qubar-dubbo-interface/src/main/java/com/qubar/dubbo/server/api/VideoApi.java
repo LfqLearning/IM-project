@@ -60,7 +60,7 @@ public interface VideoApi {
     Long queryFollowUserCount(Long followUserId);
 
     /**
-     *  根据Id查询小视频
+     * 根据Id查询小视频
      *
      * @param videoId
      * @return
@@ -68,7 +68,7 @@ public interface VideoApi {
     Video queryVideoById(String videoId);
 
     /**
-     *  根据vids批量查询视频列表
+     * 根据vids批量查询视频列表
      *
      * @param vidList
      * @return

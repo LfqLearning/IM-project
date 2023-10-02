@@ -18,15 +18,15 @@ import java.time.Duration;
 /**
  * TODO 将查询数据写入redis缓存中！！！ 很重要
  * TODO 拦截器相关知识，重点回顾与掌握！！！
- *
+ * <p>
  * 将响应体内容做缓存，如果是相同的请求，直接返回结果
  */
 @ControllerAdvice
-public class MyResponseBodyAdvice implements ResponseBodyAdvice {
+public class MyResponseBodyAdvice implements ResponseBodyAdvice<Object> {
 
+    private static final ObjectMapper mapper = new ObjectMapper();
     @Autowired
     private RedisTemplate<String, String> redisTemplate;
-    private ObjectMapper mapper = new ObjectMapper();
 
     @Override
     public boolean supports(MethodParameter returnType, Class converterType) {

@@ -2,8 +2,7 @@
 package com.qubar.sso.service;
 
 import com.aliyun.dysmsapi20170525.models.SendSmsResponse;
-import com.aliyun.tea.*;
-import com.qubar.sso.config.AliyunConfig;
+import com.aliyun.tea.TeaException;
 import com.qubar.sso.constant.AliyunAccess;
 import org.apache.commons.lang3.RandomUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -21,52 +20,12 @@ import java.util.Map;
 @Service
 public class SmsService {
 
-    @Autowired
-    private RedisTemplate<String, String> redisTemplate;
+    public static final String REDIS_KEY_PREFIX = "CHECK_CODE_";
+
     private static final Logger LOGGER = LoggerFactory.getLogger(SmsService.class);
 
-    /**
-     * 发送验证码
-     *
-     * @param mobile
-     * @return
-     */
-    // 发送验证码并从验证redis中是否已存在验证码
-    public Map<String, Object> sendCheckCode(String mobile) {
-        Map<String, Object> result = new HashMap<>(2);
-        try {
-            String redisKey = "CHECK_CODE_" + mobile;
-            // 获取验证码
-            String value = this.redisTemplate.opsForValue().get(redisKey);
-            if (StringUtils.isNotEmpty(value)) {
-                result.put("code", 1);
-                result.put("msg", "上一次发送的验证码还未失效");
-                return result;
-            }
-/*
-模拟发送短信——方便调试
-*/
-            // TODO 做了测试修改，验证码实际不会发出，后面修正
-            //String code = this.sendSms(mobile);
-            String code = "123456";
-            if (null == code) {
-                result.put("code", 2);
-                result.put("msg", "发送短信验证码失败");
-                return result;
-            }
-            // 发送验证码成功
-            result.put("code", 3);
-            result.put("msg", "ok");
-            // 将验证码存储到Redis,1分钟后失效
-            this.redisTemplate.opsForValue().set(redisKey, code, Duration.ofMinutes(1));
-            return result;
-        } catch (Exception e) {
-            LOGGER.error("发送验证码出错！" + mobile, e);
-            result.put("code", 4);
-            result.put("msg", "发送验证码出现异常");
-            return result;
-        }
-    }
+    @Autowired
+    private RedisTemplate<String, String> redisTemplate;
 
     /**
      * 使用AK&SK初始化账号Client
@@ -89,7 +48,7 @@ public class SmsService {
     }
 
     /**
-     *向aliyun短信服务器发送短信请求
+     * 向aliyun短信服务器发送短信请求
      *
      * @param mobile
      * @return 发送成功返回验证码，发送失败返回null
@@ -109,7 +68,7 @@ public class SmsService {
         // 设置短信验证码
         //sendSmsRequest.setTemplateParam("{\"code\":\"1234\"}");
         String randomNumber = String.valueOf(RandomUtils.nextInt(100000, 999999));
-        String captcha = "{\"code\":\""+ randomNumber+"\"}";
+        String captcha = "{\"code\":\"" + randomNumber + "\"}";
         sendSmsRequest.setTemplateParam(captcha);
         com.aliyun.teautil.models.RuntimeOptions runtime = new com.aliyun.teautil.models.RuntimeOptions();
         try {
@@ -120,7 +79,7 @@ public class SmsService {
             System.out.println("请求头：" + sendSmsResponse.getHeaders());
             System.out.println("HTTP请求状态码：" + sendSmsResponse.getStatusCode());*/
             // 返回生成的密码 String类型
-            if (StringUtils.equals(sendSmsResponse.getBody().getCode(), "OK")){
+            if (StringUtils.equals(sendSmsResponse.getBody().getCode(), "OK")) {
                 return randomNumber;
             }
         } catch (TeaException error) {
@@ -132,5 +91,48 @@ public class SmsService {
             com.aliyun.teautil.Common.assertAsString(error.message);
         }
         return null;
+    }
+
+    /**
+     * 发送验证码
+     *
+     * @param mobile
+     * @return
+     */
+    // 发送验证码并从验证redis中是否已存在验证码
+    public Map<String, Object> sendCheckCode(String mobile) {
+        Map<String, Object> result = new HashMap<>(2);
+        try {
+            String redisKey = REDIS_KEY_PREFIX + mobile;
+            // 获取验证码
+            String value = this.redisTemplate.opsForValue().get(redisKey);
+            if (StringUtils.isNotEmpty(value)) {
+                result.put("code", 1);
+                result.put("msg", "上一次发送的验证码还未失效");
+                return result;
+            }
+/*
+模拟发送短信——方便调试
+*/
+            // TODO 做了测试修改，验证码实际不会发出，后面修正
+            //String code = this.sendSms(mobile);
+            String code = "123456";// 测试用，模拟验证码为123456
+            if (null == code) {
+                result.put("code", 2);
+                result.put("msg", "发送短信验证码失败");
+                return result;
+            }
+            // 发送验证码成功
+            result.put("code", 3);
+            result.put("msg", "ok");
+            // 将验证码存储到Redis,1分钟后失效
+            this.redisTemplate.opsForValue().set(redisKey, code, Duration.ofMinutes(1));
+            return result;
+        } catch (Exception e) {
+            LOGGER.error("发送验证码出错！" + mobile, e);
+            result.put("code", 4);
+            result.put("msg", "发送验证码出现异常");
+            return result;
+        }
     }
 }

@@ -245,7 +245,6 @@ public class VideoService {
     }
 
 
-
     public Long queryFollowUser(Long videoAuthorId) {
 
         return this.videoApi.queryFollowUserCount(videoAuthorId);
